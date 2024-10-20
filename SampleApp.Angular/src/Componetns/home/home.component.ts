@@ -26,12 +26,12 @@ export class HomeComponent implements OnInit
 
 
   ngOnInit(): void {
-    this.users;
+    this.getUsers();
   }
 
   getUsers()
   {
-    this.http.get<User[]>('http/localhost:5066/User').subscribe({
+    this.http.get<User[]>('http://localhost:5066/User').subscribe({
       next: response => this.users = response,
       error: error => console.log(error)
       

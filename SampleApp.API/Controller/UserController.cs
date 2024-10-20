@@ -7,13 +7,16 @@ using SampleApp.API.Validaions;
 
 namespace SampleApp.API.Controllers
 {
-    [Route("api/[controller]")]
+    [Route("[controller]")]
     [ApiController]
 
 
     public class UserController : ControllerBase
     {
         private readonly IUserRepository _repo;
+
+        
+        
 
         public UserController(IUserRepository repo)
         {
@@ -29,8 +32,10 @@ namespace SampleApp.API.Controllers
             {
                 throw new Exception("${result.Errors.First().ErrorMessage}");
             }
+
             _repo.CreateUser(user);
-            return Created();
+          
+            return Created("$http://localhost:5066/{user.Id}",user);
         }
 
         [HttpPut]
