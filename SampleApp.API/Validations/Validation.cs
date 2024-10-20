@@ -13,7 +13,7 @@ namespace SampleApp.API.Validaions
 
         private bool StartsWithCapitalLetter(string username)
         {
-            return char.IsUpper(username[0]);
+            return char.IsLower(username[0]);
         }
     }
 }
