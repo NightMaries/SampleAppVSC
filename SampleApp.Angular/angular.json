@@ -27,6 +27,7 @@
               }
             ],
             "styles": [
+              "@angular/material/prebuilt-themes/azure-blue.css",
               "src/styles.css"
             ],
             "scripts": []
@@ -56,6 +57,7 @@
           "defaultConfiguration": "production"
         },
         "serve": {
+          
           "builder": "@angular-devkit/build-angular:dev-server",
           "configurations": {
             "production": {
@@ -64,8 +66,15 @@
             "development": {
               "buildTarget": "SampleApp.Angular:build:development"
             }
+
+          },
+          "options": {
+            "sslCert": "./src/crt/localhost.crt",
+            "sslKey": "./src/crt/localhost.key",
+            "ssl": true
           },
           "defaultConfiguration": "development"
+         
         },
         "extract-i18n": {
           "builder": "@angular-devkit/build-angular:extract-i18n"
@@ -85,6 +94,7 @@
               }
             ],
             "styles": [
+              "@angular/material/prebuilt-themes/azure-blue.css",
               "src/styles.css"
             ],
             "scripts": []
