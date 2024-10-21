@@ -23,9 +23,8 @@ namespace SampleApp.API.Controllers
         [HttpPost]
         public ActionResult CreateRole(Role role)
         {
-            role.Id = Guid.NewGuid();
             _repo.CreateRole(role);
-            return Created();
+            return Created("http://localhost:5066/Roles",role);
         }
 
         [HttpPut]
@@ -41,13 +40,13 @@ namespace SampleApp.API.Controllers
         }
 
         [HttpGet("{id}")]
-        public ActionResult GetRoleById(Guid id) 
+        public ActionResult GetRoleById(int id) 
         {
             return Ok(_repo.FindRoleById(id));
         }
 
         [HttpDelete]
-        public ActionResult DeleteRole(Guid id) 
+        public ActionResult DeleteRole(int id) 
         {
             return Ok(_repo.DeleteRole(id));
         }

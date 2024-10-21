@@ -1,54 +1,98 @@
+using System.Data.SqlTypes;
 using Microsoft.Net.Http.Headers;
+using SampleApp.API.Data;
 using SampleApp.API.Entities;
 using SampleApp.API.Interfaces;
-
+using Microsoft.EntityFrameworkCore;
 namespace SampleApp.API.Repositories;
 
 public class RoleRepository : IRoleRepository
 {
-    public IList<Role> Roles { get; set; } = new List<Role>();
+    private readonly SampleAppContext _db;
+
+    public RoleRepository(SampleAppContext db)
+    {
+        _db = db;
+    }
     public Role CreateRole(Role role)
     {
-        role.Id = Guid.NewGuid();
-        Roles.Add(role);
-        return role;
+        try
+        {
+            _db.Roles.Add(role);
+            _db.SaveChanges();
+            return role;
+        }
+        catch (SqlTypeException ex)
+        {
+            throw new SqlTypeException($"Ошибка SQL: {ex.Message}");
+        }
+        catch (Exception ex)
+        {
+            throw new Exception($"Ошибка: {ex.Message}");
+        }
     }
 
-    public bool DeleteRole(Guid id)
+    public bool DeleteRole(int id)
     {
-        var result = FindRoleById(id);
-        if (result == null)
-           throw new Exception("$Не удалось удалить роль");
-        else
-            Roles.Remove(result);
-        return true;
-
+        try
+        {
+            _db.Roles.Remove(FindRoleById(id));
+            _db.SaveChanges();
+            return true;
+        }
+        catch (SqlTypeException ex)
+        {
+            throw new SqlTypeException($"Ошибка SQL: {ex.Message}");
+        }
+        catch (Exception ex)
+        {
+            throw new Exception($"Ошибка: {ex.Message}");
+        }
     }
 
     /// <summary>
     /// Редактирование пользователя
     /// </summary>
-    /// <param name="user"></param>
+    /// <param name="role"></param>
     /// <param name="id"></param>
     /// <returns></returns>
-    public Role EditRole(Role role, Guid id)
+    public Role EditRole(Role role, int id)
     {
-        var result = FindRoleById(id);
-        result.Name = role.Name;
-        return result;
-
+        try
+        {
+            _db.Entry(role).State = EntityState.Modified;
+            _db.SaveChanges();
+            return(role);
+        }
+        catch (SqlTypeException ex)
+        {
+            throw new SqlTypeException($"Ошибка SQL: {ex.Message}");
+        }
+        catch (Exception ex)
+        {
+            throw new Exception($"Ошибка: {ex.Message}");
+        }
     }
 
-    public Role FindRoleById(Guid id)
+    public Role FindRoleById(int id)
     {
-        var result = Roles.Where(x => x.Id == id).FirstOrDefault();
-        if (result == null)
-            throw new Exception("$Нет такой роли с id = {id}");
-        return result;
+        try
+        {
+            return _db.Roles.Find(id);
+        }
+        catch (SqlTypeException ex)
+        {
+            throw new SqlTypeException($"Ошибка SQL: {ex.Message}");
+        }
+        catch (Exception ex)
+        {
+            throw new Exception($"Ошибка: {ex.Message}");
+        }
+        
     }
 
-    public List<Role> GetRoles()
+    public IEnumerable<Role> GetRoles()
     {
-        return(List<Role>)Roles;
+        return _db.Roles.ToList();
     }
 }

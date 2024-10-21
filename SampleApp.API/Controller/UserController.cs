@@ -32,7 +32,6 @@ namespace SampleApp.API.Controllers
             {
                 throw new Exception("${result.Errors.First().ErrorMessage}");
             }
-
             _repo.CreateUser(user);
           
             return Created("$http://localhost:5066/{user.Id}",user);
@@ -51,13 +50,13 @@ namespace SampleApp.API.Controllers
         }
 
         [HttpGet("{id}")]
-        public ActionResult GetUserById(Guid id) 
+        public ActionResult GetUserById(int id) 
         {
             return Ok(_repo.FindUserById(id));
         }
 
         [HttpDelete]
-        public ActionResult DeleteUser(Guid id) 
+        public ActionResult DeleteUser(int id) 
         {
             return Ok(_repo.DeleteUser(id));
         }

@@ -1,7 +1,8 @@
 ﻿namespace SampleApp.API.Entities;
 
-public class Role
-{
-    public Guid Id { get; set;} = Guid.NewGuid();
-    public string Name { get; set;} 
+public class Role: Base
+{   
+    public string? Name { get; set;} 
+
+    public IEnumerable<User>? Users {get; set;}
 }

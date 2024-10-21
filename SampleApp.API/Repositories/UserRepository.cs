@@ -1,27 +1,58 @@
-﻿using SampleApp.API.Entities;
+﻿using System.Data.SqlTypes;
+using SampleApp.API.Data;
+using SampleApp.API.Entities;
 using SampleApp.API.Interfaces;
+using Microsoft.EntityFrameworkCore;
+using System.Security.Cryptography;
+using System.Text;
 
 namespace SampleApp.API.Repositories;
 public class UserRepository : IUserRepository
 {
-     public IList<User> Users { get; set; } = new List<User>();
+    private readonly SampleAppContext _db;
 
- public User CreateUser(User user)
+    public HMACSHA512 hmac = new HMACSHA512();
+    public UserRepository(SampleAppContext db)
+    {
+        _db = db;
+    }
+    public User CreateUser(User user)
+    {
+        try
+        {
+            user.PasswordHash = hmac.ComputeHash(Encoding.UTF8.GetBytes("Password"));
+            user.PasswordSalt = hmac.Key;
+            _db.Users.Add(user);
+            _db.SaveChanges();
+            return user;
+        }
+        catch (SqlTypeException ex)
+        {
+            throw new SqlTypeException($"Ошибка SQL: {ex.Message}");
+        }
+        catch (Exception ex)
+        {
+            throw new Exception($"Ошибка: {ex.Message}");
+        }
+    
+    }
+
+ public bool DeleteUser(int id)
  {
-    user.Id = Guid.NewGuid();
-    Users.Add(user);
-    return user;
- }
-
- public bool DeleteUser(Guid id)
- {
-    var result = FindUserById(id);
-    if (result == null)
-        throw new Exception("Не удалось удалить пользователя");
-    else
-        Users.Remove(result);
-
-     return true;
+    try
+    {
+        _db.Users.Remove(FindUserById(id));
+        _db.SaveChanges();
+        return true;
+    }
+    catch (SqlTypeException ex)
+    {
+        throw new SqlTypeException($"Ошибка SQL: {ex.Message}");
+    }
+    catch (Exception ex)
+    {
+        throw new Exception($"Ошибка: {ex.Message}");
+    }
  }
 
 
@@ -31,26 +62,32 @@ public class UserRepository : IUserRepository
  /// <param name="user"></param>
  /// <param name="id"></param>
  /// <returns></returns>
- public User EditUser(User user, Guid id)
+ public User EditUser(User user, int id)
  {
-     var result = FindUserById(id);
-     //update
-     result.Name = user.Name;
-     return result;
+    _db.Entry(user).State = EntityState.Modified;
+    _db.SaveChanges();
+    return user;
  }
 
- public User FindUserById(Guid id)
+ public User FindUserById(int id)
  {
-     var result = Users.Where(x => x.Id == id).FirstOrDefault();
-     if (result == null)
-        throw new Exception("$Нет такого пользователся с id = {id}");
-     
-     return result;
+    try
+    {
+        return _db.Users.Find(id);
+    }
+    catch (SqlTypeException ex)
+    {
+        throw new SqlTypeException($"Ошибка SQL: {ex.Message}");
+    }
+    catch (Exception ex)
+    {
+        throw new Exception($"Ошибка: {ex.Message}");
+    }
   
  }
 
- public List<User> GetUsers()
+ public IEnumerable<User> GetUsers()
  {
-     return (List<User>)Users;
+     return _db.Users.ToList();
  }
 }
