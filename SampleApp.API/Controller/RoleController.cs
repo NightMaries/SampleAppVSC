@@ -7,7 +7,7 @@ using SampleApp.API.Validaions;
 
 namespace SampleApp.API.Controllers
 {
-    [Route("api/[controller]")]
+    [Route("[controller]")]
     [ApiController]
 
 

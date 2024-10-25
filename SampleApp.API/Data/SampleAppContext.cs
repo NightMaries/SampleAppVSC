@@ -16,6 +16,15 @@ public class SampleAppContext: DbContext
 
     protected override void OnModelCreating(ModelBuilder builder)
     {
+        builder.Entity<User>(entities => 
+
+            entities.HasOne(d => d.Role)
+                .WithMany(p => p.Users)
+                .HasForeignKey(d => d.RoleId)
+                .OnDelete(DeleteBehavior.ClientSetNull)
+                .HasConstraintName("Role")
+        
+        );
 
         builder.ApplyConfigurationsFromAssembly(typeof(SampleAppContext).Assembly);
     }

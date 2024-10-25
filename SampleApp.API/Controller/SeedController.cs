@@ -29,10 +29,10 @@ public class SeedController : ControllerBase
 
         using var hmac = new HMACSHA512();
 
-        Faker<UserDto> _faker = new Faker<UserDto>("en")
+        Faker<UserDto> _faker = new Faker<UserDto>("ru")
         .RuleFor(u => u.Login, f => GenerateLogin(f).Trim())
         .RuleFor(u => u.Password, f => GeneratePassword(f).Trim().Replace(" ",""));
-
+        
         string GenerateLogin(Faker faker)
         {
             return faker.Random.Word() + faker.Random.Number(3,5);
@@ -41,6 +41,8 @@ public class SeedController : ControllerBase
         {
             return faker.Random.Word() + faker.Random.Number(3,5);
         }
+
+        
 
         var users = _faker.Generate(100).Where(u => u.Login.Length >  4 && u.Login.Length <=10);
 

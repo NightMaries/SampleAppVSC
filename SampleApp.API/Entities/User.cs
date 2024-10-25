@@ -14,7 +14,9 @@ public class User: Base
     public required byte[] PasswordHash { get; set; } 
     public required byte[] PasswordSalt { get; set; } 
 
-    public int RoleId {get;set;}
+    public string Token { get; set; }
 
-    public Role? Role {get; set;}
+    public int RoleId { get; set; }
+
+    public Role? Role { get; set; }
 }
