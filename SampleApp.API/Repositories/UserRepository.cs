@@ -10,17 +10,18 @@ namespace SampleApp.API.Repositories;
 public class UserRepository : IUserRepository
 {
     private readonly SampleAppContext _db;
+
     public HMACSHA512 hmac = new HMACSHA512();
-    
     public UserRepository(SampleAppContext db)
     {
         _db = db;
     }
-    
     public User CreateUser(User user)
     {
         try
         {
+            user.PasswordHash = hmac.ComputeHash(Encoding.UTF8.GetBytes("Password"));
+            user.PasswordSalt = hmac.Key;
             _db.Users.Add(user);
             _db.SaveChanges();
             return user;
@@ -54,26 +55,6 @@ public class UserRepository : IUserRepository
     }
  }
 
- public bool DeleteAllUsers()
- {
-    try
-    {
-        User firstUser = _db.Users.First();
-        User lastUser = _db.Users.OrderBy(u => u.Id).Last();
-        _db.Users.RemoveRange(firstUser,lastUser);
-        _db.SaveChanges();
-        return true;
-    }
-    catch (SqlTypeException ex)
-    {
-        throw new SqlTypeException($"Ошибка SQL: {ex.Message}");
-    }
-    catch (Exception ex)
-    {
-        throw new Exception($"Ошибка: {ex.Message}");
-    }
- }
-
 
  /// <summary>
  /// Редактирование пользователя
@@ -90,17 +71,19 @@ public class UserRepository : IUserRepository
 
  public User FindUserById(int id)
  {
-
-    var user = _db.Users.Where(u => u.Id == id).FirstOrDefault<User>();
-    return user != null ? user : throw new Exception($"Нет пользователя с id = {id}"); 
-    
- }
-
- public User FindUserByLogin(string userLogin)
- {
-    var user = _db.Users.Where(u => u.Login == userLogin).FirstOrDefault<User>();
-    return user != null ? user : throw new Exception($"Нет такого пользователя"); 
-    
+    try
+    {
+        return _db.Users.Find(id);
+    }
+    catch (SqlTypeException ex)
+    {
+        throw new SqlTypeException($"Ошибка SQL: {ex.Message}");
+    }
+    catch (Exception ex)
+    {
+        throw new Exception($"Ошибка: {ex.Message}");
+    }
+  
  }
 
  public IEnumerable<User> GetUsers()

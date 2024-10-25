@@ -2,8 +2,8 @@ import { CommonModule } from '@angular/common';
 import { MatTableModule } from '@angular/material/table'
 import { HttpClient } from '@angular/common/http';
 import { Component, OnInit } from '@angular/core';
-import User from '../../Models/User';
-import Role from '../../Models/Role';
+import User from '../../Models/User'
+import { UsersLocalService } from '../../Services/userslocal.service';
 
 @Component({
   selector: 'app-home',
@@ -15,18 +15,11 @@ import Role from '../../Models/Role';
 
 export class HomeComponent implements OnInit
 {
-  
-  
-  //roles: Role[] = [];
-  users: User[] = [];
+
+  users: User[]= [];
   title: string= "Home"
 
-
-  displayedColumnsUser: string[] = ["id","login"];
-
-  //displayedColumnsRole: string[] = ["id","name"];
-
-
+  displayedColumns: string[] = ["id","name"];
 
   constructor(private http: HttpClient) 
   {}
@@ -34,7 +27,6 @@ export class HomeComponent implements OnInit
 
   ngOnInit(): void {
     this.getUsers();
-    //this.getRoles();
   }
 
   getUsers()
@@ -43,19 +35,9 @@ export class HomeComponent implements OnInit
       next: response => this.users = response,
       error: error => console.log(error)
       
-    }) 
+    })
+
   }
-/*
-  getRoles()
-  {
-      this.http.get<Role[]>('http://localhost:5066/Role').subscribe({
-        next: response => this.roles = response,
-        error: error => console.log(error)
-        
-      }) 
-  }
-*/
-  
 
 
 }
