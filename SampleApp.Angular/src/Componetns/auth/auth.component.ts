@@ -7,12 +7,13 @@ import { MatFormField, MatInputModule, MatLabel } from '@angular/material/input'
 import { Router } from '@angular/router';
 import { errorContext } from 'rxjs/internal/util/errorContext';
 import { AuthService } from '../../Services/auth.service';
+import { MatFormFieldModule } from '@angular/material/form-field';
 
 
 @Component({
   selector: 'app-auth',
   standalone: true,
-  imports: [FormsModule, CommonModule,MatInputModule,  MatFormField, MatLabel, MatIcon, MatButton],
+  imports: [CommonModule, MatFormFieldModule, FormsModule, MatLabel, MatInputModule, MatButton, MatIcon],
   templateUrl: './auth.component.html',
   styleUrl: './auth.component.css'
 })

@@ -13,7 +13,7 @@ import { Route, Router } from '@angular/router';
 
 export class AuthService {
 
-  baseUrl:String = "http://localhost/5066/"
+  baseUrl:String = "http://localhost:5066/"
 
   private currentUserSource = new ReplaySubject<User>(1);
 
@@ -26,7 +26,7 @@ export class AuthService {
 
   login(model:any)
   {
-    return this.http.post<User>(this.baseUrl + "Users/Login", model).pipe
+    return this.http.post<User>(this.baseUrl + "User/Login", model).pipe
     (
       map((response: User) =>{
         const user = response
@@ -46,12 +46,13 @@ export class AuthService {
   }
 
   register(model:any ){
-    return this.http.post(this.baseUrl+"Users",model)
+    return this.http.post(this.baseUrl+"User",model)
   }
   
   logout()
   {
     localStorage.removeItem("user")
     this.currentUserSource.next(null!);
+    this.router.navigate(["/auth"])
   }
 }

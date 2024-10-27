@@ -9,7 +9,7 @@
     
     
 
-    <button mat-button [routerLink] = "['/users']" >
+    <button mat-button [routerLink] = "['/users']"  *ngIf="authService.currentUser$ | async">
         <mat-icon>
             people
         </mat-icon>
@@ -24,9 +24,16 @@
         </mat-icon>
         Выход
     </button>
+    
+    <button *ngIf="(authService.currentUser$ | async) == null" mat-button [routerLink] = "['/auth']">
+        <mat-icon>how_to_reg</mat-icon>
+        Войти 
+    </button>
+
     <button *ngIf="(authService.currentUser$ | async) == null" mat-button [routerLink] = "['/sign']">
         <mat-icon>login</mat-icon>
         Регистрация 
     </button>
+
     
 </mat-toolbar>
