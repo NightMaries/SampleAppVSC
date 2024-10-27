@@ -75,7 +75,7 @@ namespace SampleApp.API.Controllers
             return Ok(_repo.EditUser(user, user.Id));
         }
 
-        [Authorize]
+        // [Authorize]
         [HttpGet]
         public ActionResult GetUsers()
         {
