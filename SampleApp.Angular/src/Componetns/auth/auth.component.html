@@ -1,0 +1,20 @@
+<div class = "auth">
+    <h1>Авторизация</h1>
+    <mat-form-field>
+        <mat-label>Login</mat-label>
+            <input matInput name="login" type ="text" [(ngModel)]="model.login"]/>
+    </mat-form-field>
+    
+    <mat-form-field>
+        <mat-label>Password</mat-label>
+        <input placeholder="Password" name="password" [(ngModel)]="model.password"]/>
+    </mat-form-field>
+
+    <button mat-button color="primary" type="sumbit">
+        <mat-icon>
+            login
+        </mat-icon>
+        Войти
+    </button>
+    
+</div>
